@@ -1,0 +1,93 @@
+.pop-new-card {
+  width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px 28px 24px;
+}
+
+.pop-new-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.pop-new-card__ttl {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.pop-new-card__close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+}
+.pop-new-card__close:hover { color: var(--text-primary); }
+
+.pop-new-card__wrap {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* Form */
+.form-new {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.form-new__input,
+.form-new__area {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: border-color 0.15s;
+  background: var(--white);
+  resize: none;
+}
+.form-new__input:focus,
+.form-new__area:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-new__area { height: 90px; }
+
+/* Categories */
+.pop-new-card__categories {
+  margin-bottom: 20px;
+}
+.categories__p { margin-bottom: 10px; }
+.categories__themes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Create button */
+.form-new__create {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.form-new__create:hover { background: var(--accent-hover); }
+
+@media (max-width: 700px) {
+  .pop-new-card { width: 98vw; padding: 18px; }
+  .pop-new-card__wrap { flex-direction: column; }
+}
