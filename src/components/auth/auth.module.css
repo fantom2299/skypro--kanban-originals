@@ -1,10 +1,13 @@
 .container {
-  margin: 60px auto;
-  width: 368px;
-  height: 329px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
 }
 
 .entry {
+  margin-bottom: 20px;
   font-weight: 700;
   font-size: 20px;
   line-height: 150%;
@@ -18,7 +21,6 @@
 }
 
 .input {
-  margin-left: 60px;
   padding-left: 10px;
   width: 248px;
   height: 30px;
@@ -27,9 +29,9 @@
 }
 
 .button {
-  margin: 20px 0 0 53px;
-  width: 262px;
-  height: 34px;
+  margin-top: 20px;
+  width: 248px;
+  height: 30px;
   background-color: #565eef;
   border-radius: 8px;
   border: 0;
@@ -43,7 +45,7 @@
 .login {
   width: 217px;
   height: 21px;
-  margin: 20px 0 0 70px;
+  margin: 20px 0 0 0;
 }
 
 .text {
@@ -65,7 +67,7 @@
   font-size: 14px;
   margin-top: 5px;
   margin-bottom: 10px;
-  margin-left: 56px;
+  
   text-align: center;
   font-weight: 500;
 }

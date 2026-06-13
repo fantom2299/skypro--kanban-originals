@@ -15,9 +15,9 @@
   --card-bg: #ffffff;
   --border: #d0dbe8;
   --text-primary: #1e2a3b;
-  --text-secondary: #5a6a7e;
+  --text-secondary: #94A6BE;
   --text-muted: #94a6be;
-  --accent: #4a6cf7;
+  --accent: #565EEF;
   --accent-hover: #3a5ce6;
   --orange: #f0603a;
   --orange-bg: #fff4f2;
@@ -27,8 +27,8 @@
   --purple-bg: #f3f0ff;
   --shadow: 0 2px 16px rgba(74, 108, 247, 0.08);
   --shadow-card: 0 1px 6px rgba(30, 42, 59, 0.07);
-  --radius: 12px;
-  --radius-sm: 8px;
+  --radius: 10px;
+  --radius-sm: 4px;
 }
 
 body {
@@ -48,7 +48,7 @@ body {
 .container {
   max-width: 1440px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 135px;
 }
 
 /* ── Shared label ──────────────────────────── */

@@ -1,11 +1,10 @@
 .main {
   flex: 1;
-  padding: 28px 0;
+  padding: 40px 0;
 }
 
 .main__content {
   display: flex;
-  gap: 16px;
   overflow-x: auto;
   padding-bottom: 8px;
 }

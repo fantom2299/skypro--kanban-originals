@@ -1,10 +1,10 @@
 .card {
+  width: 220px;
+  height: 130px;
   background: var(--card-bg);
   border-radius: var(--radius);
   padding: 14px;
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-card);
-  transition: box-shadow 0.15s, transform 0.15s;
   cursor: pointer;
 }
 .card:hover {
@@ -22,7 +22,7 @@
 .card__theme {
   padding: 4px 10px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
 }
 .card__theme._orange { background: var(--orange-bg); color: var(--orange); }
@@ -31,7 +31,6 @@
 
 .card__btn {
   display: flex;
-  flex-direction: column;
   gap: 3px;
   padding: 4px;
   cursor: pointer;
@@ -47,7 +46,7 @@
   font-size: 14px;
   font-weight: 500;
   color: var(--text-primary);
-  margin-bottom: 8px;
+  margin-bottom: 35px;
 }
 
 .card__date {

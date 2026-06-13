@@ -27,38 +27,66 @@ const Signup = () => {
     return hasEmptyFields || hasValidationErrors || hasFormError;
   };
 
+  // const validateForm = () => {
+  //   const newErrors = {};
+
+  //   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!formData.email) {
+  //     newErrors.email = "Введите email";
+  //   } else if (!emailRegex.test(formData.email)) {
+  //     newErrors.email =
+  //       "Введённые данные некорректны. Проверьте email и повторите попытку.";
+  //   }
+
+  //   if (!formData.password) {
+  //     newErrors.password = "Введите пароль";
+  //   } else {
+  //     // Раздельные проверки
+  //     const hasMinLength = formData.password.length >= 6;
+  //     const hasUpperCase = /[A-Z]/.test(formData.password);
+  //     const hasNumber = /[0-9]/.test(formData.password);
+  //     const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(
+  //       formData.password,
+  //     );
+
+  //     if (!hasMinLength) {
+  //       newErrors.password = "Пароль должен содержать минимум 6 символов";
+  //     } else if (!hasUpperCase) {
+  //       newErrors.password = "Пароль должен содержать заглавную букву";
+  //     } else if (!hasNumber) {
+  //       newErrors.password = "Пароль должен содержать цифру";
+  //     } else if (!hasSpecialChar) {
+  //       newErrors.password =
+  //         "Пароль должен содержать спецсимвол (!@#$%^&* и т.д.)";
+  //     }
+  //   }
+
+  //   if (!formData.password) {
+  //     newErrors.password = "Введите пароль";
+  //   } else if (formData.password.length < 6) {
+  //     newErrors.password = "Пароль должен содержать минимум 6 символов";
+  //   }
+
+  //   setErrors(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
+
   const validateForm = () => {
     const newErrors = {};
 
+    // Email проверка
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email) {
       newErrors.email = "Введите email";
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email =
-        "Введённые данные некорректны. Проверьте email и повторите попытку.";
+      newErrors.email = "Введите корректный email";
     }
 
+    // Простая проверка пароля
     if (!formData.password) {
       newErrors.password = "Введите пароль";
-    } else {
-      // Раздельные проверки
-      const hasMinLength = formData.password.length >= 6;
-      const hasUpperCase = /[A-Z]/.test(formData.password);
-      const hasNumber = /[0-9]/.test(formData.password);
-      const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(
-        formData.password,
-      );
-
-      if (!hasMinLength) {
-        newErrors.password = "Пароль должен содержать минимум 6 символов";
-      } else if (!hasUpperCase) {
-        newErrors.password = "Пароль должен содержать заглавную букву";
-      } else if (!hasNumber) {
-        newErrors.password = "Пароль должен содержать цифру";
-      } else if (!hasSpecialChar) {
-        newErrors.password =
-          "Пароль должен содержать спецсимвол (!@#$%^&* и т.д.)";
-      }
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Пароль должен быть не менее 6 символов";
     }
 
     setErrors(newErrors);

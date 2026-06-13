@@ -11,32 +11,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 70px;
 }
 
 .header__logo img {
-  height: 32px;
+  width: 84px;
+  height: 17px;
   display: block;
 }
 
 .header__nav {
   display: flex;
   align-items: center;
-  gap: 16px;
   position: relative;
 }
 
 .header__btn-main-new {
+  width: 178px;
+  height: 30px;
   background: var(--accent);
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 9px 20px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.15s;
-  white-space: nowrap;
+  line-height: 10px;
 }
 .header__btn-main-new:hover { background: var(--accent-hover); }
 
@@ -45,7 +45,7 @@
   font-weight: 500;
   color: var(--text-primary);
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 8px 0 8px 20px;
   border-radius: var(--radius-sm);
   transition: background 0.15s;
 }
