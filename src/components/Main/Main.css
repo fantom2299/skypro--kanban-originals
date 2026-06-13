@@ -1,0 +1,14 @@
+.main {
+  flex: 1;
+  padding: 40px 0;
+}
+
+.main__content {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+
+@media (max-width: 700px) {
+  .main__content { gap: 10px; }
+}

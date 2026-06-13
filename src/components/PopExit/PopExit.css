@@ -1,0 +1,43 @@
+.pop-exit {
+  width: 360px;
+  padding: 32px;
+  text-align: center;
+}
+
+.pop-exit h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.pop-exit__form-group {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.btn-yes {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-yes:hover { background: var(--accent-hover); }
+
+.btn-no {
+  background: none;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-no:hover { background: var(--bg); }
