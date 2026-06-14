@@ -1,18 +1,16 @@
 import styled from 'styled-components';
 
 export const ColumnWrapper = styled.div`
-  min-width: 260px;
-  max-width: 280px;
-  flex: 1;
+  min-width: 234px;
 `;
 
 export const ColumnTitle = styled.div`
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: ${({ theme }) => theme.colors.textSecondary};
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 14px;
+  letter-spacing: 0;
+  margin-bottom: 20px;
   padding: 0 4px;
 `;
 

@@ -13,12 +13,13 @@ export const HeaderBlock = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 70px;
 `;
 
 export const Logo = styled.div`
   img {
-    height: 32px;
+    width: 84px;
+    height: 17px;
     display: block;
   }
 `;
@@ -26,16 +27,16 @@ export const Logo = styled.div`
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 16px;
   position: relative;
 `;
 
 export const NewTaskButton = styled.button`
+  width: 178px;
+  height: 30px;
   background: ${({ theme }) => theme.colors.primary};
   color: #fff;
   border: none;
   border-radius: ${({ theme }) => theme.radius.sm};
-  padding: 9px 20px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -51,7 +52,7 @@ export const UserName = styled.span`
   font-weight: 500;
   color: ${({ theme }) => theme.colors.textPrimary};
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 8px 0 8px 20px;
   border-radius: ${({ theme }) => theme.radius.sm};
   transition: background 0.15s;
 

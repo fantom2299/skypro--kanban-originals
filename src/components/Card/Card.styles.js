@@ -16,12 +16,13 @@ const categoryStyles = {
 };
 
 export const CardWrapper = styled.div`
+  width: 220px;
+  height: 130px;
   background: ${({ theme }) => theme.colors.white};
   border-radius: ${({ theme }) => theme.radius.md};
   padding: 14px;
   border: 1px solid ${({ theme }) => theme.colors.border};
   box-shadow: ${({ theme }) => theme.shadows.card};
-  transition: box-shadow 0.15s, transform 0.15s;
   cursor: pointer;
 
   &:hover {
@@ -40,7 +41,7 @@ export const CardGroup = styled.div`
 export const CardTheme = styled.div`
   padding: 4px 10px;
   border-radius: 20px;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 500;
   ${({ theme, $variant = '_orange' }) => {
     const cfg = categoryStyles[$variant] || categoryStyles._orange;
@@ -53,7 +54,7 @@ export const CardTheme = styled.div`
 
 export const CardButton = styled.div`
   display: flex;
-  flex-direction: column;
+  
   gap: 3px;
   padding: 4px;
   cursor: pointer;
@@ -70,7 +71,7 @@ export const CardTitle = styled.h3`
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.colors.textPrimary};
-  margin-bottom: 8px;
+  margin-bottom: 35px;
 `;
 
 export const CardDate = styled.div`
