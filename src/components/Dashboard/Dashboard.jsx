@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import PopNewCard from "../PopNewCard/PopNewCard";
@@ -9,6 +9,7 @@ import { INITIAL_TASKS } from "../../data/constants";
 
 const Dashboard = ({ user, onLogout }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [popup, setPopup] = useState(null);
@@ -16,29 +17,23 @@ const Dashboard = ({ user, onLogout }) => {
   const [tasks, setTasks] = useState([]);
   const nextId = useRef(1);
 
+  // Загружаем задачи из localStorage
   useEffect(() => {
     if (!user) {
       navigate("/login");
       return;
     }
 
-    // Загружаем задачи из localStorage
     const loadTasks = () => {
       const storedTasks = localStorage.getItem("tasks");
-      
       if (storedTasks && storedTasks !== "[]") {
-        // Если есть сохранённые задачи - загружаем их
         const parsedTasks = JSON.parse(storedTasks);
         setTasks(parsedTasks);
-        
         const maxId = Math.max(...parsedTasks.map(t => Number(t.id)), 0);
         nextId.current = maxId + 1;
       } else {
-        // Если нет задач - сохраняем начальные
-        console.log("Нет задач, сохраняем INITIAL_TASKS:", INITIAL_TASKS);
         localStorage.setItem("tasks", JSON.stringify(INITIAL_TASKS));
         setTasks(INITIAL_TASKS);
-        
         const maxId = Math.max(...INITIAL_TASKS.map(t => t.id), 0);
         nextId.current = maxId + 1;
       }
@@ -62,14 +57,18 @@ const Dashboard = ({ user, onLogout }) => {
     }
   }, [tasks]);
 
+  // 🟢 Открытие просмотра задачи с ID в URL
   const openBrowse = (task) => {
     setActiveTask(task);
     setPopup("browse");
+    navigate(`/task/${task.id}`); // ← ID в URL
   };
 
+  // 🔴 Закрытие модалки - возвращаемся на главную
   const closePopup = () => {
     setPopup(null);
     setActiveTask(null);
+    navigate("/"); // ← возврат на главную
   };
 
   const createTask = (data) => {
@@ -78,12 +77,7 @@ const Dashboard = ({ user, onLogout }) => {
       id: nextId.current,
     };
     nextId.current += 1;
-    
-    setTasks((prev) => {
-      const updated = [...prev, newTask];
-      console.log("Создана задача, всего:", updated.length);
-      return updated;
-    });
+    setTasks((prev) => [...prev, newTask]);
   };
 
   const updateTask = (updated) => {
@@ -99,7 +93,6 @@ const Dashboard = ({ user, onLogout }) => {
     const newTheme = !isDarkTheme;
     setIsDarkTheme(newTheme);
     localStorage.setItem("darkTheme", newTheme);
-
     if (newTheme) {
       document.body.classList.add("dark-theme");
     } else {
@@ -116,10 +109,22 @@ const Dashboard = ({ user, onLogout }) => {
     navigate("/login");
   };
 
+  // 🔄 Если URL содержит /task/:id, но модалка не открыта - открываем
+  useEffect(() => {
+    const pathSegments = location.pathname.split("/");
+    if (pathSegments[1] === "task" && pathSegments[2]) {
+      const taskId = pathSegments[2];
+      const foundTask = tasks.find(t => String(t.id) === String(taskId));
+      if (foundTask && popup !== "browse") {
+        setActiveTask(foundTask);
+        setPopup("browse");
+      }
+    }
+  }, [location.pathname, tasks]);
+
   if (isLoading) {
     return <div className="loading">Загрузка...</div>;
   }
-
 
   return (
     <div className={`dashboard ${isDarkTheme ? "dark" : ""}`}>

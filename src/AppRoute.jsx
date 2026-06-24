@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Signup from "./components/auth/Sign-up/Signup";
 import Signin from "./components/auth/Sign-in/Signin";
 import Dashboard from "./components/Dashboard/Dashboard";
-import TaskDetail from "./components/TaskDetail/TaskDetail"; // ← импорт
 import NotFound from "./components/NotFound/NotFound";
 
 const PrivateRoute = ({ children }) => {
@@ -46,16 +45,16 @@ const AppRoute = ({ user,  onLogin, onLogout }) => {
           }
         />
 
-        {/* ← Маршрут для детальной страницы задачи */}
         <Route
           path="/task/:id"
           element={
             <PrivateRoute>
-              <TaskDetail />
+              <Dashboard user={user} onLogout={onLogout} />
             </PrivateRoute>
           }
         />
 
+        
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

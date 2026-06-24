@@ -18,7 +18,7 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
       status,
       date: date || "—",
     };
-    onUpdate(updatedTask); // ← обновляем через пропс
+    onUpdate(updatedTask);
     setEditMode(false);
   };
 
@@ -30,9 +30,12 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
   return (
     <div className="overlay" onClick={onClose}>
       <div className="pop pop-browse" onClick={(e) => e.stopPropagation()}>
-        {/* Title + Category */}
+        {/* Title + Category + ID */}
         <div className="pop-browse__top-block">
-          <h3 className="pop-browse__ttl">{task.title}</h3>
+          <h3 className="pop-browse__ttl">
+            {task.title}
+            
+          </h3>
           <div
             className={`categories__theme ${cat.colorClass} _active-category theme-top`}
           >

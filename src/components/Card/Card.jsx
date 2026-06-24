@@ -6,7 +6,6 @@ import {
   CardButton,
   CardTitle,
   CardDate,
-  
   CardLink,
 } from './Card.styles';
 
@@ -25,7 +24,6 @@ export default function Card({ task, onOpen }) {
       <CardWrapper>
         <CardGroup>
           <CardTheme $variant={cat.colorClass}>{cat.label}</CardTheme>
-          {/* <CardId>ID: {task.id}</CardId> */}
           <CardButton onClick={handleMenuClick}>
             <div />
             <div />
