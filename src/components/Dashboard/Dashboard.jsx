@@ -57,20 +57,29 @@ const Dashboard = ({ user, onLogout }) => {
     }
   }, [tasks]);
 
-  // 🟢 Открытие просмотра задачи с ID в URL
+  // Открытие просмотра задачи с ID в URL
   const openBrowse = (task) => {
     setActiveTask(task);
     setPopup("browse");
-    navigate(`/task/${task.id}`); // ← ID в URL
+    navigate(`/task/${task.id}`);
   };
 
-  // 🔴 Закрытие модалки - возвращаемся на главную
-  const closePopup = () => {
+  // Закрытие модалки
+  const closePopup = (newTask = null) => {
     setPopup(null);
     setActiveTask(null);
-    navigate("/"); // ← возврат на главную
+    
+    // 🔥 Если передана новая задача - открываем её в модалке с ID в URL
+    if (newTask) {
+      setActiveTask(newTask);
+      setPopup("browse");
+      navigate(`/task/${newTask.id}`);
+    } else {
+      navigate("/");
+    }
   };
 
+  // 🔥 Создание задачи
   const createTask = (data) => {
     const newTask = {
       ...data,
@@ -78,6 +87,9 @@ const Dashboard = ({ user, onLogout }) => {
     };
     nextId.current += 1;
     setTasks((prev) => [...prev, newTask]);
+    
+    // 🔥 Возвращаем созданную задачу
+    return newTask;
   };
 
   const updateTask = (updated) => {
@@ -87,6 +99,8 @@ const Dashboard = ({ user, onLogout }) => {
 
   const deleteTask = (id) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
+    // Если удалили задачу - закрываем модалку
+    closePopup();
   };
 
   const handleToggleTheme = () => {
@@ -109,7 +123,7 @@ const Dashboard = ({ user, onLogout }) => {
     navigate("/login");
   };
 
-  // 🔄 Если URL содержит /task/:id, но модалка не открыта - открываем
+ 
   useEffect(() => {
     const pathSegments = location.pathname.split("/");
     if (pathSegments[1] === "task" && pathSegments[2]) {
@@ -145,14 +159,14 @@ const Dashboard = ({ user, onLogout }) => {
       {popup === "browse" && activeTask && (
         <PopBrowse
           task={activeTask}
-          onClose={closePopup}
+          onClose={() => closePopup(null)}
           onUpdate={updateTask}
           onDelete={deleteTask}
         />
       )}
 
       {popup === "exit" && (
-        <PopExit onConfirm={confirmLogout} onCancel={closePopup} />
+        <PopExit onConfirm={confirmLogout} onCancel={() => closePopup(null)} />
       )}
     </div>
   );

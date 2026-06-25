@@ -18,37 +18,40 @@ import {
   CategoriesThemes,
   CategoryTheme,
   CreateButton,
-} from "../PopNewCard/PopNewCard.styles";
+} from "./PopNewCard.styles";
 
 const PopNewCard = ({ onClose, onCreate }) => {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [category, setCategory] = useState("orange");
   const [date, setDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
+ 
   const handleCreate = () => {
-    if (!title.trim()) return;
-    
-    // Вызываем onCreate, который добавит задачу в state и сохранит в localStorage
-    onCreate({
-      title: title.trim(),
-      desc,
-      category,
-      date: date || new Date().toLocaleDateString(),
-      status: "Без статуса",
-    });
-    
-    onClose();
+  if (!title.trim()) return;
+  
+  // 🔥 Создаём задачу и получаем её
+  const newTask = onCreate({
+    title: title.trim(),
+    desc,
+    category,
+    date: date || new Date().toLocaleDateString(),
+    status: "Без статуса",
+  });
+  
+  // 🔥 Закрываем модалку и передаём созданную задачу
+  onClose(newTask);
   };
 
   return (
-    <Overlay onClick={onClose}>
+    <Overlay onClick={() => onClose(null)}>
       <PopContainer onClick={(e) => e.stopPropagation()}>
         <TopBlock>
           <Title>Создание задачи</Title>
-          <CloseButton onClick={onClose}>✕</CloseButton>
+          <CloseButton onClick={() => onClose(null)}>✕</CloseButton>
         </TopBlock>
-        
+
         <Wrap>
           <Form onSubmit={(e) => e.preventDefault()}>
             <FormBlock>
@@ -60,9 +63,10 @@ const PopNewCard = ({ onClose, onCreate }) => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 autoFocus
+                disabled={isLoading}
               />
             </FormBlock>
-            
+
             <FormBlock>
               <Label htmlFor="textArea">Описание задачи</Label>
               <TextArea
@@ -70,13 +74,14 @@ const PopNewCard = ({ onClose, onCreate }) => {
                 placeholder="Введите описание задачи..."
                 value={desc}
                 onChange={(e) => setDesc(e.target.value)}
+                disabled={isLoading}
               />
             </FormBlock>
           </Form>
-          
+
           <Calendar selectedDate={date} onSelect={setDate} />
         </Wrap>
-        
+
         <CategoriesBlock>
           <CategoriesTitle>Категория</CategoriesTitle>
           <CategoriesThemes>
@@ -92,8 +97,10 @@ const PopNewCard = ({ onClose, onCreate }) => {
             ))}
           </CategoriesThemes>
         </CategoriesBlock>
-        
-        <CreateButton onClick={handleCreate}>Создать задачу</CreateButton>
+
+        <CreateButton onClick={handleCreate} disabled={isLoading}>
+          {isLoading ? "Создание..." : "Создать задачу"}
+        </CreateButton>
       </PopContainer>
     </Overlay>
   );
