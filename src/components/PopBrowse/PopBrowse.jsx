@@ -24,8 +24,9 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
 
   const handleDelete = () => {
     onDelete(task.id);
-    onClose();
+    // onClose();
   };
+
 
   return (
     <div className="overlay" onClick={onClose}>

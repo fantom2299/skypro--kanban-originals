@@ -17,7 +17,12 @@ const Dashboard = ({ user, onLogout }) => {
   const [tasks, setTasks] = useState([]);
   const nextId = useRef(1);
 
-  // Загружаем задачи из localStorage
+  // 🔥 Ключ для хранения задач
+  const getTasksKey = () => {
+    return user?.id ? `tasks_${user.id}` : 'tasks';
+  };
+
+  // Загружаем задачи
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -25,14 +30,21 @@ const Dashboard = ({ user, onLogout }) => {
     }
 
     const loadTasks = () => {
-      const storedTasks = localStorage.getItem("tasks");
+      const key = getTasksKey();
+      console.log('📂 Загружаем задачи по ключу:', key);
+      
+      const storedTasks = localStorage.getItem(key);
+      console.log('📂 Найденные данные:', storedTasks);
+      
       if (storedTasks && storedTasks !== "[]") {
         const parsedTasks = JSON.parse(storedTasks);
         setTasks(parsedTasks);
         const maxId = Math.max(...parsedTasks.map(t => Number(t.id)), 0);
         nextId.current = maxId + 1;
+        console.log('✅ Загружено задач:', parsedTasks.length);
       } else {
-        localStorage.setItem("tasks", JSON.stringify(INITIAL_TASKS));
+        console.log('⚠️ Нет задач, создаём начальные');
+        localStorage.setItem(key, JSON.stringify(INITIAL_TASKS));
         setTasks(INITIAL_TASKS);
         const maxId = Math.max(...INITIAL_TASKS.map(t => t.id), 0);
         nextId.current = maxId + 1;
@@ -50,26 +62,27 @@ const Dashboard = ({ user, onLogout }) => {
     setIsLoading(false);
   }, [user, navigate]);
 
-  // Сохраняем задачи при каждом изменении
+  // 🔥 Сохраняем задачи при каждом изменении
   useEffect(() => {
-    if (tasks.length > 0) {
-      localStorage.setItem("tasks", JSON.stringify(tasks));
-    }
+    const key = getTasksKey();
+    console.log('💾 Сохранение задач в ключ:', key);
+    console.log('💾 Количество задач:', tasks.length);
+    
+    // Сохраняем ВСЕГДА (даже если задач нет)
+    localStorage.setItem(key, JSON.stringify(tasks));
+    console.log('💾 Задачи сохранены');
   }, [tasks]);
 
-  // Открытие просмотра задачи с ID в URL
   const openBrowse = (task) => {
     setActiveTask(task);
     setPopup("browse");
     navigate(`/task/${task.id}`);
   };
 
-  // Закрытие модалки
   const closePopup = (newTask = null) => {
     setPopup(null);
     setActiveTask(null);
     
-    // 🔥 Если передана новая задача - открываем её в модалке с ID в URL
     if (newTask) {
       setActiveTask(newTask);
       setPopup("browse");
@@ -79,28 +92,70 @@ const Dashboard = ({ user, onLogout }) => {
     }
   };
 
-  // 🔥 Создание задачи
+  // 🔥 ИСПРАВЛЕНО: Создание задачи
   const createTask = (data) => {
-    const newTask = {
-      ...data,
-      id: nextId.current,
-    };
-    nextId.current += 1;
-    setTasks((prev) => [...prev, newTask]);
+    console.log('📝 Создание задачи с данными:', data);
+    console.log('📝 Текущий nextId:', nextId.current);
     
-    // 🔥 Возвращаем созданную задачу
+    // Создаём задачу с ID первым
+    const newTask = {
+      id: nextId.current,
+      ...data,
+      userId: user.id,
+      createdAt: new Date().toISOString(),
+    };
+    
+    // Увеличиваем nextId
+    nextId.current += 1;
+    console.log('📝 Новый nextId:', nextId.current);
+    
+    // Обновляем состояние
+    setTasks((prevTasks) => {
+      const updatedTasks = [...prevTasks, newTask];
+      console.log('📋 Обновлённый список задач:', updatedTasks);
+      
+      // 🔥 Принудительно сохраняем в localStorage
+      const key = getTasksKey();
+      localStorage.setItem(key, JSON.stringify(updatedTasks));
+      console.log('💾 Принудительно сохранено в localStorage');
+      
+      return updatedTasks;
+    });
+    
+    console.log('✅ Задача создана:', newTask);
     return newTask;
   };
 
+  // Обновление задачи
   const updateTask = (updated) => {
-    setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
+    console.log('✏️ Обновление задачи:', updated);
+    setTasks((prev) => {
+      const updatedTasks = prev.map((t) => (t.id === updated.id ? updated : t));
+      
+      // Принудительно сохраняем
+      const key = getTasksKey();
+      localStorage.setItem(key, JSON.stringify(updatedTasks));
+      
+      return updatedTasks;
+    });
     setActiveTask(updated);
   };
 
+  // Удаление задачи
   const deleteTask = (id) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
-    // Если удалили задачу - закрываем модалку
-    closePopup();
+    console.log('🗑 Удаление задачи с ID:', id);
+    setTasks((prev) => {
+      const updatedTasks = prev.filter((t) => t.id !== id);
+      
+      // Принудительно сохраняем
+      const key = getTasksKey();
+      localStorage.setItem(key, JSON.stringify(updatedTasks));
+      
+      return updatedTasks;
+    });
+    setPopup(null);
+    setActiveTask(null);
+    navigate("/");
   };
 
   const handleToggleTheme = () => {
@@ -123,7 +178,7 @@ const Dashboard = ({ user, onLogout }) => {
     navigate("/login");
   };
 
- 
+  // Если URL содержит /task/:id, но модалка не открыта - открываем
   useEffect(() => {
     const pathSegments = location.pathname.split("/");
     if (pathSegments[1] === "task" && pathSegments[2]) {
@@ -132,6 +187,10 @@ const Dashboard = ({ user, onLogout }) => {
       if (foundTask && popup !== "browse") {
         setActiveTask(foundTask);
         setPopup("browse");
+      } else if (!foundTask && popup === "browse") {
+        setPopup(null);
+        setActiveTask(null);
+        navigate("/");
       }
     }
   }, [location.pathname, tasks]);
