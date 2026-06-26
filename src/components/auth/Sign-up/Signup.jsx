@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { authAPI } from "../../../api/authAPI";
 import {
   Container,
-  Form, 
+  Form,
   Title,
   Input,
   SubmitButton,
@@ -22,6 +23,7 @@ const Signup = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [formError, setFormError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const hasErrors = () => {
     const hasEmptyFields =
@@ -34,14 +36,12 @@ const Signup = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Валидация имени
     if (!formData.name.trim()) {
       newErrors.name = "Введите имя";
     } else if (formData.name.length < 2) {
       newErrors.name = "Имя должно содержать минимум 2 символа";
     }
 
-    // Валидация email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email) {
       newErrors.email = "Введите email";
@@ -50,7 +50,6 @@ const Signup = () => {
         "Введённые данные некорректны. Проверьте email и повторите попытку.";
     }
 
-    // Валидация пароля
     if (!formData.password) {
       newErrors.password = "Введите пароль";
     } else if (
@@ -77,7 +76,7 @@ const Signup = () => {
     setTouched({ ...touched, [e.target.name]: true });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ name: true, email: true, password: true });
 
@@ -100,32 +99,40 @@ const Signup = () => {
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    if (users.some((u) => u.email === formData.email)) {
-      setErrors({
-        ...errors,
-        email: "Пользователь с таким email уже существует",
-      });
-      return;
-    }
+    // 🔥 ОТПРАВКА НА СЕРВЕР
+    setIsLoading(true);
+    setFormError("");
 
-    const newUser = {
-      id: Date.now(),
-      name: formData.name,
-      email: formData.email,
-      password: formData.password,
-      registeredAt: new Date().toISOString(),
-    };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    navigate("/login");
+    try {
+      await authAPI.register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // После успешной регистрации переходим на страницу входа
+      navigate("/login");
+    } catch (err) {
+      console.error("❌ Ошибка регистрации:", err);
+      
+      if (err.message.includes("существует") || err.message.includes("already")) {
+        setErrors({
+          ...errors,
+          email: "Пользователь с таким email уже существует",
+        });
+      } else {
+        setFormError(err.message || "Ошибка регистрации. Попробуйте позже.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getFieldError = (fieldName) => {
     return touched[fieldName] && errors[fieldName];
   };
 
-  const isDisabled = hasErrors();
+  const isDisabled = hasErrors() || isLoading;
 
   return (
     <Container>
@@ -140,6 +147,7 @@ const Signup = () => {
           onChange={handleChange}
           onBlur={handleBlur}
           $error={getFieldError("name")}
+          disabled={isLoading}
         />
         {getFieldError("name") && <ErrorText>{errors.name}</ErrorText>}
 
@@ -151,6 +159,7 @@ const Signup = () => {
           onChange={handleChange}
           onBlur={handleBlur}
           $error={getFieldError("email")}
+          disabled={isLoading}
         />
         {getFieldError("email") && <ErrorText>{errors.email}</ErrorText>}
 
@@ -162,13 +171,14 @@ const Signup = () => {
           onChange={handleChange}
           onBlur={handleBlur}
           $error={getFieldError("password")}
+          disabled={isLoading}
         />
         {getFieldError("password") && <ErrorText>{errors.password}</ErrorText>}
 
         {formError && <ErrorText>{formError}</ErrorText>}
 
         <SubmitButton type="submit" $disabled={isDisabled}>
-          Зарегистрироваться
+          {isLoading ? "Регистрация..." : "Зарегистрироваться"}
         </SubmitButton>
       </Form>
 

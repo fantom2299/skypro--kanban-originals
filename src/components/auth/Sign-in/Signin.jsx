@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { authAPI } from "../../../api/authAPI";
 import {
   Container,
   Form,
@@ -10,16 +11,17 @@ import {
   Footer,
   FooterText,
   StyledLink,
-} from "./Signin.styles"; 
+} from "./Signin.styles";
 
 const Signin = ({ onLogin }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
+    login: "",
     password: "",
   });
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,34 +39,43 @@ const Signin = ({ onLogin }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setTouched({
-      email: true,
+      login: true,
       password: true,
     });
 
-    if (!formData.email || !formData.password) {
+    if (!formData.login || !formData.password) {
       setError("Заполните все поля");
       return;
     }
 
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find(
-      (u) => u.email === formData.email && u.password === formData.password,
-    );
+    // 🔥 ОТПРАВКА НА СЕРВЕР
+    setIsLoading(true);
+    setError("");
 
-    if (user) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      onLogin(user);
-      navigate("/");
-    } else {
-      setError("Неверный email или пароль");
+    try {
+      const result = await authAPI.login({
+        login: formData.login,
+        password: formData.password,
+      });
+
+      // Сохраняем данные пользователя
+      if (result.user) {
+        localStorage.setItem("currentUser", JSON.stringify(result.user));
+        onLogin(result.user);
+        navigate("/");
+      }
+    } catch (err) {
+      console.error("❌ Ошибка входа:", err);
+      setError(err.message || "Неверный логин или пароль");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Определяем, есть ли ошибка для поля
   const getFieldError = (fieldName) => {
     return touched[fieldName] && error && !formData[fieldName];
   };
@@ -75,13 +86,14 @@ const Signin = ({ onLogin }) => {
         <Title>Вход</Title>
 
         <Input
-          type="email"
-          name="email"
-          placeholder="Эл. почта"
-          value={formData.email}
+          type="text"
+          name="login"
+          placeholder="Логин"
+          value={formData.login}
           onChange={handleChange}
           onBlur={handleBlur}
-          $error={getFieldError("email")}
+          $error={getFieldError("login")}
+          disabled={isLoading}
         />
 
         <Input
@@ -92,11 +104,14 @@ const Signin = ({ onLogin }) => {
           onChange={handleChange}
           onBlur={handleBlur}
           $error={getFieldError("password")}
+          disabled={isLoading}
         />
 
         {error && <ErrorText>{error}</ErrorText>}
 
-        <SubmitButton type="submit">Войти</SubmitButton>
+        <SubmitButton type="submit" disabled={isLoading}>
+          {isLoading ? "Вход..." : "Войти"}
+        </SubmitButton>
       </Form>
 
       <Footer>
