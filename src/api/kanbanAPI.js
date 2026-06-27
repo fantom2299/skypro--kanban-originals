@@ -70,7 +70,7 @@ const formatDateForAPI = (dateInput) => {
   }
 
   // Если ничего не подошло - текущая дата
-  console.warn('⚠️ Неизвестный формат даты:', dateInput, 'используем текущую дату');
+  
   return new Date().toISOString();
 };
 
@@ -134,7 +134,7 @@ export const kanbanAPI = {
       return tasks.map(task => ({
         id: task._id,
         title: task.title || 'Новая задача',
-        desc: task.description || '',
+        desc: task.description || ' ',
         category: mapTopicToCategory(task.topic),
         status: task.status || 'Без статуса',
         date: formatDateFromAPI(task.date),
@@ -143,7 +143,7 @@ export const kanbanAPI = {
         _id: task._id,
       }));
     } catch (error) {
-      console.error('❌ Ошибка получения задач:', error);
+      
       throw error;
     }
   },
@@ -155,8 +155,9 @@ export const kanbanAPI = {
       if (!token) {
         throw new Error('Токен не найден. Пожалуйста, войдите заново.');
       }
+
+
       
-      console.log('📝 Создание задачи:', taskData);
       
       // 🔥 ФОРМАТИРУЕМ ДАТУ ПРАВИЛЬНО
       let formattedDate;
@@ -166,17 +167,17 @@ export const kanbanAPI = {
         formattedDate = new Date().toISOString();
       }
       
-      console.log('📅 Дата для API:', formattedDate);
+      
       
       const requestData = {
         title: taskData.title || 'Новая задача',
         topic: mapCategoryToTopic(taskData.category || 'orange'),
         status: taskData.status || 'Без статуса',
-        description: taskData.desc || '',
+        description: taskData.desc || ' ',
         date: formattedDate,
       };
       
-      console.log('📤 Отправка на сервер:', requestData);
+      
       
       const response = await fetch(`${API_BASE_URL}/kanban`, {
         method: 'POST',
@@ -191,7 +192,7 @@ export const kanbanAPI = {
       const tasks = result.tasks || [];
       const newTask = tasks[tasks.length - 1];
       
-      console.log('✅ Задача создана:', newTask);
+     
       
       return {
         id: newTask._id,
@@ -205,7 +206,7 @@ export const kanbanAPI = {
         _id: newTask._id,
       };
     } catch (error) {
-      console.error('❌ Ошибка создания задачи:', error);
+      
       throw error;
     }
   },
@@ -218,7 +219,7 @@ export const kanbanAPI = {
         throw new Error('Токен не найден. Пожалуйста, войдите заново.');
       }
       
-      console.log('✏️ Обновление задачи:', id, taskData);
+      
       
       // 🔥 ФОРМАТИРУЕМ ДАТУ ПРАВИЛЬНО
       let formattedDate;
@@ -232,11 +233,11 @@ export const kanbanAPI = {
         title: taskData.title,
         topic: mapCategoryToTopic(taskData.category),
         status: taskData.status,
-        description: taskData.desc || '',
+        description: taskData.desc || ' ',
         date: formattedDate,
       };
       
-      console.log('📤 Отправка на сервер:', requestData);
+      
       
       const response = await fetch(`${API_BASE_URL}/kanban/${id}`, {
         method: 'PUT',
@@ -256,7 +257,7 @@ export const kanbanAPI = {
         throw new Error('Обновлённая задача не найдена');
       }
       
-      console.log('✅ Задача обновлена:', updatedTask);
+      
       
       return {
         id: updatedTask._id,
@@ -270,7 +271,7 @@ export const kanbanAPI = {
         _id: updatedTask._id,
       };
     } catch (error) {
-      console.error('❌ Ошибка обновления задачи:', error);
+      
       throw error;
     }
   },
@@ -283,7 +284,7 @@ export const kanbanAPI = {
         throw new Error('Токен не найден. Пожалуйста, войдите заново.');
       }
       
-      console.log('🗑 Удаление задачи:', id);
+      
       
       const response = await fetch(`${API_BASE_URL}/kanban/${id}`, {
         method: 'DELETE',
@@ -294,10 +295,10 @@ export const kanbanAPI = {
       
       await handleResponse(response);
       
-      console.log('✅ Задача удалена');
+      
       return { success: true };
     } catch (error) {
-      console.error('❌ Ошибка удаления задачи:', error);
+      
       throw error;
     }
   },

@@ -12,7 +12,7 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
 
   const cat = CATEGORIES.find((c) => c.id === task.category) || CATEGORIES[0];
 
-  // 🔥 СОХРАНЕНИЕ ИЗМЕНЕНИЙ
+  //  СОХРАНЕНИЕ ИЗМЕНЕНИЙ
   const handleSave = async () => {
     setIsLoading(true);
     
@@ -24,15 +24,15 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
         date: date || "—",
       };
       
-      console.log('✏️ Сохранение изменений:', updatedTask);
+      
       
       // Вызываем onUpdate из Dashboard
       await onUpdate(updatedTask);
       
-      console.log('✅ Изменения сохранены');
+      
       setEditMode(false);
     } catch (error) {
-      console.error('❌ Ошибка сохранения:', error);
+      
       alert('Не удалось сохранить изменения. Попробуйте снова.');
     } finally {
       setIsLoading(false);
@@ -41,9 +41,7 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
 
   // 🗑 УДАЛЕНИЕ ЗАДАЧИ
   const handleDelete = () => {
-    if (window.confirm(`Удалить задачу "${task.title}"?`)) {
-      onDelete(task.id);
-    }
+    onDelete(task.id);
   };
 
   // Отмена редактирования
@@ -67,7 +65,7 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
         <div className="pop-browse__top-block">
           <h3 className="pop-browse__ttl">
             {task.title}
-            <span className="task-id-badge">ID: {task.id}</span>
+            {/* <span className="task-id-badge">ID: {task.id}</span> */}
           </h3>
           <div
             className={`categories__theme ${cat.colorClass} _active-category theme-top`}
@@ -132,10 +130,10 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
           <div className="pop-browse__btn-browse">
             <div className="btn-group">
               <button className="_btn-bor" onClick={() => setEditMode(true)}>
-                ✏️ Редактировать задачу
+                Редактировать задачу
               </button>
               <button className="_btn-bor" onClick={handleDelete}>
-                🗑 Удалить задачу
+                Удалить задачу
               </button>
             </div>
             <button className="_btn-bg" onClick={onClose}>
@@ -146,13 +144,13 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
           <div className="pop-browse__btn-browse">
             <div className="btn-group">
               <button className="_btn-bg" onClick={handleSave} disabled={isLoading}>
-                {isLoading ? "Сохранение..." : "💾 Сохранить"}
+                {isLoading ? "Сохранение..." : "Сохранить"}
               </button>
               <button className="_btn-bor" onClick={handleCancel} disabled={isLoading}>
-                ✕ Отменить
+                Отменить
               </button>
               <button className="_btn-bor" onClick={handleDelete}>
-                🗑 Удалить задачу
+                Удалить задачу
               </button>
             </div>
             <button className="_btn-bg" onClick={onClose} disabled={isLoading}>

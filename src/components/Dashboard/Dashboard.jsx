@@ -97,8 +97,8 @@ const Dashboard = ({ user, onLogout }) => {
     
     
     // Обновляем задачу в списке
-    setTasks((prev) => prev.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
-    setActiveTask(updatedTask);
+    // setTasks((prev) => prev.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
+    // setActiveTask(updatedTask);
   } catch (err) {
     
     setError(err.message || 'Не удалось обновить задачу');
@@ -110,7 +110,7 @@ const Dashboard = ({ user, onLogout }) => {
   const deleteTask = async (id) => {
     try {
       console.log('🗑 Удаление задачи...');
-      await tasksAPI.delete(id);
+      await kanbanAPI.delete(id);
       console.log('✅ Задача удалена');
       
       setTasks((prev) => prev.filter((t) => t.id !== id));
@@ -160,9 +160,9 @@ const Dashboard = ({ user, onLogout }) => {
     }
   }, [location.pathname, tasks]);
 
-  if (isLoading) {
-    return <div className="loading">Загрузка задач...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className="loading">Загрузка задач...</div>;
+  // }
 
   if (error) {
     return (
