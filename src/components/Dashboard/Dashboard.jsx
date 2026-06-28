@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useTasks } from "../../Сontexts/TaskContext";
-import { useTheme } from "../../Сontexts/ThemeContext";
+import { useTasks } from "../../Contexts/TaskContext";
+import { useTheme } from "../../Contexts/ThemeContext";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import PopNewCard from "../PopNewCard/PopNewCard";

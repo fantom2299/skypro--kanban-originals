@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./Сontexts/AuthContext";
-import { useTheme } from "./Сontexts/ThemeContext";
+import { useAuth } from "./Contexts/AuthContext";
+import { useTheme } from "./Contexts/ThemeContext";
 import Signup from "./components/auth/Sign-up/Signup";
 import Signin from "./components/auth/Sign-in/Signin";
 import Dashboard from "./components/Dashboard/Dashboard";

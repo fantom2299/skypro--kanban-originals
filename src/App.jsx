@@ -1,7 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "./Сontexts/AuthContext";
-import { TaskProvider } from "./Сontexts/TaskContext";
-import { ThemeProvider } from "./Сontexts/ThemeContext";
+import { AuthProvider } from "./Contexts/AuthContext";
+import { TaskProvider } from "./Contexts/TaskContext";
+import { ThemeProvider } from "./Contexts/ThemeContext";
 import AppRoute from "./AppRoute";
 import "./App.css";
 
