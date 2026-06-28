@@ -1,51 +1,54 @@
-// src/AppRoute.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./Сontexts/AuthContext";
+import { useTheme } from "./Сontexts/ThemeContext";
 import Signup from "./components/auth/Sign-up/Signup";
 import Signin from "./components/auth/Sign-in/Signin";
 import Dashboard from "./components/Dashboard/Dashboard";
 import NotFound from "./components/NotFound/NotFound";
 
 const PrivateRoute = ({ children }) => {
-  const currentUser = localStorage.getItem("currentUser");
-  return currentUser ? children : <Navigate to="/login" />;
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
 const PublicRoute = ({ children }) => {
-  const currentUser = localStorage.getItem("currentUser");
-  return !currentUser ? children : <Navigate to="/" />;
+  const { isAuthenticated } = useAuth();
+  return !isAuthenticated ? children : <Navigate to="/" />;
 };
 
-const AppRoute = ({ user, onLogin, onLogout }) => {
+const AppRoute = () => {
+  const { user, logout } = useAuth();
+  const { isDarkTheme, toggleTheme } = useTheme();
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
-        <Route path="/login" element={<PublicRoute><Signin onLogin={onLogin} /></PublicRoute>} />
-        
-        {/* Главная */}
-        <Route path="/" element={
-          <PrivateRoute>
-            <Dashboard user={user} onLogout={onLogout} />
-          </PrivateRoute>
-        } />
-        
-        {/* 🔥 Просмотр задачи */}
-        <Route path="/task/:id" element={
-          <PrivateRoute>
-            <Dashboard user={user} onLogout={onLogout} />
-          </PrivateRoute>
-        } />
-        
-        {/* 🔥🔥🔥 ДОБАВЬ ЭТОТ МАРШРУТ - редактирование задачи */}
-        <Route path="/task/:id/edit" element={
-          <PrivateRoute>
-            <Dashboard user={user} onLogout={onLogout} />
-          </PrivateRoute>
-        } />
-        
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
+      <Route path="/login" element={<PublicRoute><Signin /></PublicRoute>} />
+      
+      <Route path="/" element={
+        <PrivateRoute>
+          <Dashboard 
+            user={user} 
+            onLogout={logout}
+            isDarkTheme={isDarkTheme}
+            onToggleTheme={toggleTheme}
+          />
+        </PrivateRoute>
+      } />
+      
+      <Route path="/task/:id" element={
+        <PrivateRoute>
+          <Dashboard 
+            user={user} 
+            onLogout={logout}
+            isDarkTheme={isDarkTheme}
+            onToggleTheme={toggleTheme}
+          />
+        </PrivateRoute>
+      } />
+      
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 };
 

@@ -7,6 +7,7 @@ export const MainWrapper = styled.main`
 
 export const Content = styled.div`
   display: flex;
+  gap: 19px;
   overflow-x: auto;
   padding-bottom: 8px;
 

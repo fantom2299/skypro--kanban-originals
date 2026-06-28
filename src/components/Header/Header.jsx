@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import PopUser from '../PopUser/PopUser';
 import {
   HeaderWrapper,
@@ -10,19 +9,16 @@ import {
   UserName,
 } from './Header.styles';
 
-export default function Header({ onNewCard, onExit }) {
+export default function Header({ user, onNewCard, onExit, onToggleTheme, isDarkTheme }) {
   const [userOpen, setUserOpen] = useState(false);
-  const navigate = useNavigate();
 
-  const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
-  const userName = currentUser?.name || 'Гость';
-  const userEmail = currentUser?.email || '';
+  // 🔥 Используем пропс user вместо localStorage
+  const userName = user?.name || 'Гость';
+  const userEmail = user?.email || '';
 
   const handleExit = () => {
     setUserOpen(false);
-    localStorage.removeItem('currentUser');
     onExit?.();
-    navigate('/login');
   };
 
   return (
@@ -30,7 +26,10 @@ export default function Header({ onNewCard, onExit }) {
       <div className="container">
         <HeaderBlock>
           <Logo>
-            <img src="../../../public/assets/logo.png" alt="logo" />
+            <img 
+              src={isDarkTheme ? "/assets/logo_dark.png" : "/assets/logo.png"} 
+              alt="logo" 
+            />
           </Logo>
 
           <Nav>
@@ -42,7 +41,14 @@ export default function Header({ onNewCard, onExit }) {
               {userName}
             </UserName>
 
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <svg 
+              width="16" 
+              height="16" 
+              viewBox="0 0 16 16" 
+              fill="none"
+              style={{ marginLeft: '4px', cursor: 'pointer' }}
+              onClick={() => setUserOpen((o) => !o)}
+            >
               <path
                 d="M4 6L8 10L12 6"
                 stroke="currentColor"
@@ -52,12 +58,15 @@ export default function Header({ onNewCard, onExit }) {
               />
             </svg>
 
+            {/* 🔥 Один PopUser с правильными пропсами */}
             <PopUser
               open={userOpen}
               name={userName}
               email={userEmail}
               onClose={() => setUserOpen(false)}
               onExit={handleExit}
+              onToggleTheme={onToggleTheme}
+              isDarkTheme={isDarkTheme}
             />
           </Nav>
         </HeaderBlock>

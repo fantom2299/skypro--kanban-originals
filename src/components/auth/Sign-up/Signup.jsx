@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { authAPI } from "../../../api/authAPI";
+import { useAuth } from "../../../Сontexts/AuthContext";
 import {
   Container,
   Form,
@@ -15,6 +15,7 @@ import {
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -25,6 +26,7 @@ const Signup = () => {
   const [formError, setFormError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // 🔥 Валидация формы
   const hasErrors = () => {
     const hasEmptyFields =
       !formData.name.trim() || !formData.email || !formData.password;
@@ -36,12 +38,14 @@ const Signup = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    // Валидация имени
     if (!formData.name.trim()) {
       newErrors.name = "Введите имя";
     } else if (formData.name.length < 2) {
       newErrors.name = "Имя должно содержать минимум 2 символа";
     }
 
+    // Валидация email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email) {
       newErrors.email = "Введите email";
@@ -50,6 +54,7 @@ const Signup = () => {
         "Введённые данные некорректны. Проверьте email и повторите попытку.";
     }
 
+    // Валидация пароля
     if (!formData.password) {
       newErrors.password = "Введите пароль";
     } else if (
@@ -65,6 +70,7 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // 🔥 Обработчики событий
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -76,10 +82,12 @@ const Signup = () => {
     setTouched({ ...touched, [e.target.name]: true });
   };
 
+  // 🔥 Отправка формы
   const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ name: true, email: true, password: true });
 
+    // Проверка на пустые поля
     const hasEmptyFields =
       !formData.name.trim() || !formData.email || !formData.password;
     if (hasEmptyFields) {
@@ -92,6 +100,7 @@ const Signup = () => {
       return;
     }
 
+    // Валидация
     if (!validateForm()) {
       setFormError(
         "Введённые данные некорректны. Проверьте данные и повторите попытку."
@@ -99,35 +108,26 @@ const Signup = () => {
       return;
     }
 
-    // 🔥 ОТПРАВКА НА СЕРВЕР
+    // 🔥 Отправка на сервер через AuthContext
     setIsLoading(true);
     setFormError("");
 
-    try {
-      await authAPI.register({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      });
+    const result = await register({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    });
 
-      // После успешной регистрации переходим на страницу входа
+    if (result.success) {
       navigate("/login");
-    } catch (err) {
-      console.error("❌ Ошибка регистрации:", err);
-      
-      if (err.message.includes("существует") || err.message.includes("already")) {
-        setErrors({
-          ...errors,
-          email: "Пользователь с таким email уже существует",
-        });
-      } else {
-        setFormError(err.message || "Ошибка регистрации. Попробуйте позже.");
-      }
-    } finally {
-      setIsLoading(false);
+    } else {
+      setFormError(result.error || "Ошибка регистрации. Попробуйте позже.");
     }
+
+    setIsLoading(false);
   };
 
+  // 🔥 Проверка ошибок поля
   const getFieldError = (fieldName) => {
     return touched[fieldName] && errors[fieldName];
   };

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authAPI } from "../../../api/authAPI";
+import { useAuth } from "../../../Сontexts/AuthContext";
 import {
   Container,
   Form,
@@ -13,8 +13,9 @@ import {
   StyledLink,
 } from "./Signin.styles";
 
-const Signin = ({ onLogin }) => {
+const Signin = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     login: "",
     password: "",
@@ -52,28 +53,21 @@ const Signin = ({ onLogin }) => {
       return;
     }
 
-    // 🔥 ОТПРАВКА НА СЕРВЕР
     setIsLoading(true);
     setError("");
 
-    try {
-      const result = await authAPI.login({
-        login: formData.login,
-        password: formData.password,
-      });
+    const result = await login({
+      login: formData.login,
+      password: formData.password,
+    });
 
-      // Сохраняем данные пользователя
-      if (result.user) {
-        localStorage.setItem("currentUser", JSON.stringify(result.user));
-        onLogin(result.user);
-        navigate("/");
-      }
-    } catch (err) {
-      console.error("❌ Ошибка входа:", err);
-      setError(err.message || "Неверный логин или пароль");
-    } finally {
-      setIsLoading(false);
+    if (result.success) {
+      navigate("/");
+    } else {
+      setError(result.error || "Неверный логин или пароль");
     }
+
+    setIsLoading(false);
   };
 
   const getFieldError = (fieldName) => {

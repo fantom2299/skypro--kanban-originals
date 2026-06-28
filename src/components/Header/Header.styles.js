@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
 export const HeaderWrapper = styled.header`
-  background: ${({ theme }) => theme.colors.white};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  // background: ${({ theme }) => theme.colors.white};
+  // border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: background 0.3s ease, border-color 0.3s ease;
 `;
 
 export const HeaderBlock = styled.div`
@@ -14,6 +15,8 @@ export const HeaderBlock = styled.div`
   align-items: center;
   justify-content: space-between;
   height: 70px;
+  max-width: 1440px;
+  margin: 0 auto;
 `;
 
 export const Logo = styled.div`
@@ -28,6 +31,7 @@ export const Nav = styled.nav`
   display: flex;
   align-items: center;
   position: relative;
+  gap: 8px;
 `;
 
 export const NewTaskButton = styled.button`
@@ -50,13 +54,13 @@ export const NewTaskButton = styled.button`
 export const UserName = styled.span`
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.colors.textPrimary};
+  color: ${({ theme }) => theme.colors.textprimary};
   cursor: pointer;
   padding: 8px 0 8px 20px;
   border-radius: ${({ theme }) => theme.radius.sm};
   transition: background 0.15s;
 
-  &:hover {
-    background: ${({ theme }) => theme.colors.background};
-  }
+  // &:hover {
+  //   color: ${({ theme }) => theme.colors.background};
+  // }
 `;

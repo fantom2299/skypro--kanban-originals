@@ -1,149 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useTasks } from "../../Сontexts/TaskContext";
+import { useTheme } from "../../Сontexts/ThemeContext";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
 import PopNewCard from "../PopNewCard/PopNewCard";
 import PopBrowse from "../PopBrowse/PopBrowse";
 import PopExit from "../PopExit/PopExit";
-import { kanbanAPI } from "../../api/kanbanAPI";
 
 const Dashboard = ({ user, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const { tasks, isLoading, error, createTask, updateTask, deleteTask } = useTasks();
+  const { isDarkTheme, toggleTheme } = useTheme();
   const [popup, setPopup] = useState(null);
   const [activeTask, setActiveTask] = useState(null);
-  const [tasks, setTasks] = useState([]);
-  const [error, setError] = useState(null);
 
-  // 🔥 ЗАГРУЗКА ЗАДАЧ С СЕРВЕРА
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
-    }
-
-    const loadTasks = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        
-        const data = await kanbanAPI.getAll();
-        
-        
-        setTasks(data);
-      } catch (err) {
-        
-        setError(err.message || 'Не удалось загрузить задачи');
-        setTasks([]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadTasks();
-
-    const savedTheme = localStorage.getItem("darkTheme");
-    if (savedTheme === "true") {
-      setIsDarkTheme(true);
-      document.body.classList.add("dark-theme");
-    }
-  }, [user, navigate]);
-
-  // Открытие просмотра задачи
-  const openBrowse = (task) => {
-    setActiveTask(task);
-    setPopup("browse");
-    navigate(`/task/${task.id}`);
-  };
-
-  // Закрытие модалки
-  const closePopup = (newTask = null) => {
-    setPopup(null);
-    setActiveTask(null);
-    
-    if (newTask) {
-      setActiveTask(newTask);
-      setPopup("browse");
-      navigate(`/task/${newTask.id}`);
-    } else {
-      navigate("/");
-    }
-  };
-
-  // 🔥 СОЗДАНИЕ ЗАДАЧИ
-  const createTask = async (data) => {
-    try {
-      
-      const newTask = await kanbanAPI.create(data);
-      
-      
-      setTasks((prev) => [...prev, newTask]);
-      return newTask;
-    } catch (err) {
-      
-      setError(err.message || 'Не удалось создать задачу');
-      throw err;
-    }
-  };
-
-  // 🔥 ОБНОВЛЕНИЕ ЗАДАЧИ
-  const updateTask = async (updated) => {
-  try {
-    
-    const updatedTask = await kanbanAPI.update(updated.id, updated);
-    
-    
-    // Обновляем задачу в списке
-    // setTasks((prev) => prev.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
-    // setActiveTask(updatedTask);
-  } catch (err) {
-    
-    setError(err.message || 'Не удалось обновить задачу');
-    throw err; // пробрасываем ошибку в PopBrowse
-  }
-};
-
-  // 🔥 УДАЛЕНИЕ ЗАДАЧИ
-  const deleteTask = async (id) => {
-    try {
-      console.log('🗑 Удаление задачи...');
-      await kanbanAPI.delete(id);
-      console.log('✅ Задача удалена');
-      
-      setTasks((prev) => prev.filter((t) => t.id !== id));
-      setPopup(null);
-      setActiveTask(null);
-      navigate("/");
-    } catch (err) {
-      console.error('❌ Ошибка удаления задачи:', err);
-      setError(err.message || 'Не удалось удалить задачу');
-    }
-  };
-
-  const handleToggleTheme = () => {
-    const newTheme = !isDarkTheme;
-    setIsDarkTheme(newTheme);
-    localStorage.setItem("darkTheme", newTheme);
-    if (newTheme) {
-      document.body.classList.add("dark-theme");
-    } else {
-      document.body.classList.remove("dark-theme");
-    }
-  };
-
-  const handleLogoutClick = () => {
-    setPopup("exit");
-  };
-
-  const confirmLogout = () => {
-    onLogout();
-    navigate("/login");
-  };
-
-  // Если URL содержит /task/:id, но модалка не открыта - открываем
+  // 🔥 Следим за URL и открываем модалку если нужно
   useEffect(() => {
     const pathSegments = location.pathname.split("/");
     if (pathSegments[1] === "task" && pathSegments[2]) {
@@ -160,9 +33,60 @@ const Dashboard = ({ user, onLogout }) => {
     }
   }, [location.pathname, tasks]);
 
-  // if (isLoading) {
-  //   return <div className="loading">Загрузка задач...</div>;
-  // }
+  // 🔥 Открытие просмотра задачи
+  const openBrowse = (task) => {
+    setActiveTask(task);
+    setPopup("browse");
+    navigate(`/task/${task.id}`);
+  };
+
+  // 🔥 Закрытие модалки
+  const closePopup = (newTask = null) => {
+    setPopup(null);
+    setActiveTask(null);
+    if (newTask) {
+      setActiveTask(newTask);
+      setPopup("browse");
+      navigate(`/task/${newTask.id}`);
+    } else {
+      navigate("/");
+    }
+  };
+
+  // 🔥 Создание задачи
+  const handleCreateTask = async (data) => {
+    const result = await createTask(data);
+    if (result.success) {
+      closePopup(result.task);
+    }
+  };
+
+  // 🔥 Обновление задачи
+  const handleUpdateTask = async (updated) => {
+    const result = await updateTask(updated.id, updated);
+    if (result.success) {
+      setActiveTask(result.task);
+    }
+  };
+
+  // 🔥 Удаление задачи
+  const handleDeleteTask = async (id) => {
+    const result = await deleteTask(id);
+    if (result.success) {
+      setPopup(null);
+      setActiveTask(null);
+      navigate("/");
+    }
+  };
+
+  // 🔥 Выход из системы
+  const handleLogoutClick = () => {
+    setPopup("exit");
+  };
+
+  if (isLoading) {
+    return <div className="loading">Загрузка задач...</div>;
+  }
 
   if (error) {
     return (
@@ -179,27 +103,27 @@ const Dashboard = ({ user, onLogout }) => {
         user={user}
         onNewCard={() => setPopup("new")}
         onExit={handleLogoutClick}
-        onToggleTheme={handleToggleTheme}
+        onToggleTheme={toggleTheme}
         isDarkTheme={isDarkTheme}
       />
 
       <Main tasks={tasks} onOpen={openBrowse} />
 
       {popup === "new" && (
-        <PopNewCard onClose={closePopup} onCreate={createTask} />
+        <PopNewCard onClose={closePopup} onCreate={handleCreateTask} />
       )}
 
       {popup === "browse" && activeTask && (
         <PopBrowse
           task={activeTask}
           onClose={() => closePopup(null)}
-          onUpdate={updateTask}
-          onDelete={deleteTask}
+          onUpdate={handleUpdateTask}
+          onDelete={handleDeleteTask}
         />
       )}
 
       {popup === "exit" && (
-        <PopExit onConfirm={confirmLogout} onCancel={() => closePopup(null)} />
+        <PopExit onConfirm={onLogout} onCancel={() => closePopup(null)} />
       )}
     </div>
   );

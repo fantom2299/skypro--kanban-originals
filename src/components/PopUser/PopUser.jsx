@@ -1,39 +1,51 @@
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {
-  PopUserSet,
+  PopUserContainer,
   Name,
-  Mail,
-  ThemeRow,
+  Email,
+  ThemeBlock,
   Checkbox,
-  ExitButton,
+  LogoutButton,
 } from './PopUser.styles';
 
-export default function PopUser({ open, name, email, onClose, onExit }) {
+export default function PopUser({ 
+  open, 
+  onClose, 
+  onExit, 
+  onToggleTheme, 
+  isDarkTheme,
+  name,
+  email 
+}) {
   const ref = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) onClose();
+      if (ref.current && !ref.current.contains(e.target)) {
+        onClose();
+      }
     };
-    if (open) document.addEventListener('mousedown', handler);
+    if (open) {
+      document.addEventListener('mousedown', handler);
+    }
     return () => document.removeEventListener('mousedown', handler);
   }, [open, onClose]);
 
   if (!open) return null;
 
   return (
-    <PopUserSet ref={ref}>
-      <Name>{name}</Name>
-      <Mail>{email}</Mail>
-
-      <ThemeRow>
+    <PopUserContainer ref={ref}>
+      <Name>{name || 'Гость'}</Name>
+      <Email>{email || ''}</Email>
+      <ThemeBlock>
         <p>Темная тема</p>
-        <Checkbox type="checkbox" />
-      </ThemeRow>
-
-      <ExitButton type="button" onClick={onExit}>
-        Выйти
-      </ExitButton>
-    </PopUserSet>
+        <Checkbox
+          type="checkbox"
+          checked={isDarkTheme}
+          onChange={onToggleTheme}
+        />
+      </ThemeBlock>
+      <LogoutButton onClick={onExit}>Выйти</LogoutButton>
+    </PopUserContainer>
   );
 }
