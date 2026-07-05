@@ -16,15 +16,15 @@
   --border: #d0dbe8;
   --text-primary: #1e2a3b;
   --text-secondary: #94A6BE;
-  --text-muted: #94a6be;
+  --text-muted: #000000;
   --accent: #565EEF;
   --accent-hover: #3a5ce6;
-  --orange: #f0603a;
-  --orange-bg: #fff4f2;
-  --green: #05a081;
-  --green-bg: #f0fbf8;
-  --purple: #7b61ff;
-  --purple-bg: #f3f0ff;
+  --orange: #FF6D00;
+  --orange-bg: #FFE4C2;
+  --green: #06B16E;
+  --green-bg: #B4FDD1;
+  --purple: #9A48F1;
+  --purple-bg: #E9D4FF;
   --shadow: 0 2px 16px rgba(74, 108, 247, 0.08);
   --shadow-card: 0 1px 6px rgba(30, 42, 59, 0.07);
   --radius: 10px;
@@ -151,23 +151,32 @@ body {
 .categories__theme._orange {
   background: var(--orange-bg);
   color: var(--orange);
+  opacity: 40%;
 }
 .categories__theme._green {
   background: var(--green-bg);
   color: var(--green);
+  opacity: 40%;
 }
 .categories__theme._purple {
   background: var(--purple-bg);
   color: var(--purple);
+  opacity: 40%;
 }
 .categories__theme._active-category._orange {
-  border-color: var(--orange);
+  background: var(--orange-bg);
+  color: var(--orange);
+  opacity: 100%;
 }
 .categories__theme._active-category._green {
-  border-color: var(--green);
+  background: var(--green-bg);
+  color: var(--green);
+  opacity: 100%;
 }
 .categories__theme._active-category._purple {
-  border-color: var(--purple);
+  background: var(--purple-bg);
+  color: var(--purple);
+  opacity: 100%;
 }
 
 /* ── Scrollbar ─────────────────────────────── */

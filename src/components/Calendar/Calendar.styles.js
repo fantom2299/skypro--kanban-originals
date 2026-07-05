@@ -9,7 +9,6 @@ export const CalendarTitle = styled.div`
 `;
 
 export const CalendarBlock = styled.div`
-  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.radius.sm};
   overflow: hidden;
 `;
@@ -19,7 +18,8 @@ export const CalendarNav = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 10px 12px;
-  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.textMuted};
+  // background: ${({ theme }) => theme.colors.background};
 `;
 
 export const CalendarMonth = styled.div`
@@ -30,6 +30,7 @@ export const CalendarMonth = styled.div`
 export const NavActions = styled.div`
   display: flex;
   gap: 8px;
+  
 `;
 
 export const NavAction = styled.button`
@@ -48,6 +49,7 @@ export const NavAction = styled.button`
 
 export const CalendarContent = styled.div`
   padding: 8px;
+  color: ${({ theme }) => theme.colors.textMuted};
 `;
 
 export const DaysNames = styled.div`
@@ -55,14 +57,14 @@ export const DaysNames = styled.div`
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
   margin-bottom: 4px;
+  color: ${({ theme }) => theme.colors.textMuted};
 `;
 
 export const DayName = styled.div`
   text-align: center;
   font-size: 11px;
   font-weight: 600;
-  color: ${({ theme, $weekend }) =>
-    $weekend ? theme.colors.orange : theme.colors.textMuted};
+  color: ${({ theme }) => theme.colors.textMuted};
   padding: 3px 0;
 `;
 
@@ -76,17 +78,17 @@ export const Cell = styled.button`
   text-align: center;
   font-size: 12px;
   padding: 4px 2px;
-  border-radius: 4px;
+  border-radius: 22px;
   border: none;
   background: ${({ theme, $current, $active }) => {
     if ($current) return theme.colors.primary;
-    if ($active) return theme.colors.green;
+    if ($active) return theme.colors.textMuted;
     return 'transparent';
   }};
   color: ${({ theme, $current, $active, $other, $weekend }) => {
     if ($current || $active) return '#fff';
     if ($other) return theme.colors.textMuted;
-    if ($weekend) return theme.colors.orange;
+    if ($weekend) return theme.colors.textMuted;
     return theme.colors.textPrimary;
   }};
   font-weight: ${({ $current, $active }) =>
@@ -101,7 +103,6 @@ export const Cell = styled.button`
 
 export const Period = styled.div`
   padding: 8px 12px;
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
   font-size: 12px;
   color: ${({ theme }) => theme.colors.textMuted};
 `;

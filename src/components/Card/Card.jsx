@@ -27,6 +27,7 @@ export default function Card({ task, onOpen }) {
         <CardTitle>{task.title}</CardTitle>
 
         <CardDate>
+          <span><img src="../../../public/assets/calendar.png" alt="calendar" /></span>
           <p>{task.date}</p>
         </CardDate>
       </div>

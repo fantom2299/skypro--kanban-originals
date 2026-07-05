@@ -37,32 +37,57 @@ const Signin = ({ onLogin }) => {
     });
   };
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   setTouched({
+  //     email: true,
+  //     password: true,
+  //   });
+
+  //   if (!formData.email || !formData.password) {
+  //     setError("Заполните все поля");
+  //     return;
+  //   }
+
+  //   const users = JSON.parse(localStorage.getItem("users") || "[]");
+  //   const user = users.find(
+  //     (u) => u.email === formData.email && u.password === formData.password,
+  //   );
+
+  //   if (user) {
+  //     localStorage.setItem("currentUser", JSON.stringify(user));
+  //     onLogin(user);
+  //     navigate("/");
+  //   } else {
+  //     setError("Неверный email или пароль");
+  //   }
+  // };
+
+
   const handleSubmit = (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    setTouched({
-      email: true,
-      password: true,
-    });
+  if (!formData.email || !formData.password) {
+    setError("Заполните все поля");
+    return;
+  }
 
-    if (!formData.email || !formData.password) {
-      setError("Заполните все поля");
-      return;
-    }
-
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find(
-      (u) => u.email === formData.email && u.password === formData.password,
-    );
-
-    if (user) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
-      onLogin(user);
-      navigate("/");
-    } else {
-      setError("Неверный email или пароль");
-    }
+  // 🔥 ЛЮБОЙ пользователь проходит
+  const user = {
+    id: Date.now(),
+    name: "Тестовый пользователь",
+    email: formData.email,
   };
+
+  localStorage.setItem("currentUser", JSON.stringify(user));
+  onLogin(user);
+  navigate("/");
+};
+
+
+
+
 
   // Определяем, есть ли ошибка для поля
   const getFieldError = (fieldName) => {
