@@ -69,10 +69,13 @@ export default function PopNewCard({ onClose, onCreate }) {
             ))}
           </div>
         </div>
-
-        <button className="form-new__create" onClick={handleCreate}>
+        <div className="button">
+          <button className="form-new__create" onClick={handleCreate}>
           Создать задачу
         </button>
+        </div>
+
+        
       </div>
     </div>
   );

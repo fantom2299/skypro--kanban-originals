@@ -14,13 +14,14 @@
 
 .pop-new-card__ttl {
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
+  font-family: Roboto, sans-serif;
 }
 
 .pop-new-card__close {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 14px;
   cursor: pointer;
   color: var(--text-muted);
   padding: 4px;
@@ -73,15 +74,20 @@
 }
 
 /* Create button */
+.button {
+  text-align: right;
+}
+
 .form-new__create {
-  width: 100%;
+  width: 132px;
+  height: 30px;
   background: var(--accent);
   color: #fff;
   border: none;
   border-radius: var(--radius-sm);
-  padding: 12px;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.15s;
 }

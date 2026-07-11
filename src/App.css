@@ -11,10 +11,13 @@
 :root {
   --white: #ffffff;
   --bg: #f0f4f9;
+  --bg-primary: #565EEF;
   --header-bg: #ffffff;
   --card-bg: #ffffff;
-  --border: #d0dbe8;
-  --text-primary: #1e2a3b;
+  --border: #565EEF;
+  --border-text-area: #94A6BE66;
+  --background: #565EEF;
+  --text-primary: #565EEF;
   --text-secondary: #94A6BE;
   --text-muted: #000000;
   --accent: #565EEF;
@@ -107,14 +110,15 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 9px 16px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   color: var(--text-primary);
   transition: background 0.15s;
 }
 ._btn-bor:hover {
-  background: var(--bg);
+  background: var(--bg-primary);
+  color: #fff;
 }
 
 ._btn-bg {
@@ -130,6 +134,7 @@ body {
 }
 ._btn-bg:hover {
   background: var(--accent-hover);
+  
 }
 
 .btn-group {

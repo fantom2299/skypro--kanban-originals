@@ -67,14 +67,7 @@ export default function PopBrowse({ task, onClose, onUpdate, onDelete }) {
           <Calendar selectedDate={date} onSelect={editMode ? setDate : undefined} />
         </div>
 
-        {/* Category (bottom) */}
-        <div className="theme-down__categories theme-down">
-          <p className="categories__p subttl">Категория</p>
-          <div className={`categories__theme ${cat.colorClass} _active-category`}>
-            <p className={cat.colorClass}>{cat.label}</p>
-          </div>
-        </div>
-
+       
         {/* Buttons */}
         {!editMode ? (
           <div className="pop-browse__btn-browse">

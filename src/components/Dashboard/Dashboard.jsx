@@ -37,17 +37,21 @@ const Dashboard = ({ user, onLogout }) => {
     setActiveTask(task);
     setPopup("browse");
   };
+
   const closePopup = () => {
     setPopup(null);
     setActiveTask(null);
   };
+
   const createTask = (data) => {
     setTasks((prev) => [...prev, { ...data, id: nextId.current++ }]);
   };
+
   const updateTask = (updated) => {
     setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
     setActiveTask(updated);
   };
+
   const deleteTask = (id) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
@@ -59,8 +63,22 @@ const Dashboard = ({ user, onLogout }) => {
     document.body.classList.toggle("dark-theme", newTheme);
   };
 
+  const handleExitClick = () => {
+    
+    setPopup("exit");
+  };
+
   const confirmLogout = () => {
-    onLogout();
+    
+    
+    
+    if (typeof onLogout === "function") {
+      onLogout();
+    } else {
+      localStorage.removeItem("currentUser");
+    }
+    
+    
     navigate("/login");
   };
 
@@ -84,7 +102,7 @@ const Dashboard = ({ user, onLogout }) => {
       <Header
         user={user}
         onNewCard={() => setPopup("new")}
-        onExit={() => setPopup("exit")}
+        onExit={handleExitClick}  
         onToggleTheme={handleToggleTheme}
         isDarkTheme={isDarkTheme}
       />
@@ -94,6 +112,7 @@ const Dashboard = ({ user, onLogout }) => {
       {popup === "new" && (
         <PopNewCard onClose={closePopup} onCreate={createTask} />
       )}
+      
       {popup === "browse" && activeTask && (
         <PopBrowse
           task={activeTask}
@@ -102,6 +121,7 @@ const Dashboard = ({ user, onLogout }) => {
           onDelete={deleteTask}
         />
       )}
+      
       {popup === "exit" && (
         <PopExit onConfirm={confirmLogout} onCancel={closePopup} />
       )}
