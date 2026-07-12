@@ -18,12 +18,12 @@ export default function Header({ onNewCard, onExit }) {
   const userName = currentUser?.name || 'Гость';
   const userEmail = currentUser?.email || '';
 
-  const handleExit = () => {
-    setUserOpen(false);
-    localStorage.removeItem('currentUser');
-    onExit?.();
-    navigate('/login');
-  };
+  // const handleExit = () => {
+  //   setUserOpen(false);
+  //   localStorage.removeItem('currentUser');
+  //   onExit?.();
+  //   navigate('/login');
+  // };
 
   return (
     <HeaderWrapper>
@@ -57,7 +57,7 @@ export default function Header({ onNewCard, onExit }) {
               name={userName}
               email={userEmail}
               onClose={() => setUserOpen(false)}
-              onExit={handleExit}
+              onExit={onExit}
             />
           </Nav>
         </HeaderBlock>

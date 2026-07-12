@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Header from "../Header/Header";
 import Main from "../Main/Main";
@@ -16,8 +16,9 @@ const Dashboard = ({ user, onLogout }) => {
   const [activeTask, setActiveTask] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
+  const isLoadedRef = useRef(false);  // ← 🔥 флаг, что задачи уже загружены
 
-  // 🔥 ЗАГРУЗКА ЗАДАЧ С СЕРВЕРА
+  // 🔥 ЗАГРУЗКА ЗАДАЧ С СЕРВЕРА (ТОЛЬКО 1 РАЗ)
   useEffect(() => {
     if (!user) {
       navigate("/login");
@@ -25,18 +26,23 @@ const Dashboard = ({ user, onLogout }) => {
     }
 
     const loadTasks = async () => {
+      // 🔥 Если задачи уже загружены — пропускаем
+      if (isLoadedRef.current) {
+        
+        return;
+      }
+
       try {
         setIsLoading(true);
         setError(null);
         
-        
         const data = await kanbanAPI.getAll();
         
-        
         setTasks(data);
+        isLoadedRef.current = true;  // ← запоминаем, что загрузили
       } catch (err) {
         
-        setError(err.message || 'Не удалось загрузить задачи');
+        setError(err.message || "Не удалось загрузить задачи");
         setTasks([]);
       } finally {
         setIsLoading(false);
@@ -50,7 +56,7 @@ const Dashboard = ({ user, onLogout }) => {
       setIsDarkTheme(true);
       document.body.classList.add("dark-theme");
     }
-  }, [user, navigate]);
+  }, [user, navigate]);  // ← только user и navigate
 
   // Открытие просмотра задачи
   const openBrowse = (task) => {
@@ -63,7 +69,7 @@ const Dashboard = ({ user, onLogout }) => {
   const closePopup = (newTask = null) => {
     setPopup(null);
     setActiveTask(null);
-    
+
     if (newTask) {
       setActiveTask(newTask);
       setPopup("browse");
@@ -79,47 +85,43 @@ const Dashboard = ({ user, onLogout }) => {
       
       const newTask = await kanbanAPI.create(data);
       
-      
       setTasks((prev) => [...prev, newTask]);
       return newTask;
     } catch (err) {
       
-      setError(err.message || 'Не удалось создать задачу');
+      setError(err.message || "Не удалось создать задачу");
       throw err;
     }
   };
 
   // 🔥 ОБНОВЛЕНИЕ ЗАДАЧИ
   const updateTask = async (updated) => {
-  try {
-    
-    const updatedTask = await kanbanAPI.update(updated.id, updated);
-    
-    
-    // Обновляем задачу в списке
-    // setTasks((prev) => prev.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
-    // setActiveTask(updatedTask);
-  } catch (err) {
-    
-    setError(err.message || 'Не удалось обновить задачу');
-    throw err; // пробрасываем ошибку в PopBrowse
-  }
-};
+    try {
+      
+      const updatedTask = await kanbanAPI.update(updated.id, updated);
+      
+      setTasks((prev) => prev.map((t) => (t.id === updatedTask.id ? updatedTask : t)));
+      setActiveTask(updatedTask);
+    } catch (err) {
+      
+      setError(err.message || "Не удалось обновить задачу");
+      throw err;
+    }
+  };
 
   // 🔥 УДАЛЕНИЕ ЗАДАЧИ
   const deleteTask = async (id) => {
     try {
-      console.log('🗑 Удаление задачи...');
+      
       await kanbanAPI.delete(id);
-      console.log('✅ Задача удалена');
       
       setTasks((prev) => prev.filter((t) => t.id !== id));
       setPopup(null);
       setActiveTask(null);
       navigate("/");
     } catch (err) {
-      console.error('❌ Ошибка удаления задачи:', err);
-      setError(err.message || 'Не удалось удалить задачу');
+      
+      setError(err.message || "Не удалось удалить задачу");
     }
   };
 
@@ -148,7 +150,7 @@ const Dashboard = ({ user, onLogout }) => {
     const pathSegments = location.pathname.split("/");
     if (pathSegments[1] === "task" && pathSegments[2]) {
       const taskId = pathSegments[2];
-      const foundTask = tasks.find(t => String(t.id) === String(taskId));
+      const foundTask = tasks.find((t) => String(t.id) === String(taskId));
       if (foundTask && popup !== "browse") {
         setActiveTask(foundTask);
         setPopup("browse");
@@ -160,9 +162,17 @@ const Dashboard = ({ user, onLogout }) => {
     }
   }, [location.pathname, tasks]);
 
-  // if (isLoading) {
-  //   return <div className="loading">Загрузка задач...</div>;
-  // }
+  // 🔥 Ручное обновление задач (если нужно)
+  const refreshTasks = async () => {
+    isLoadedRef.current = false;  // сбрасываем флаг
+    try {
+      const data = await kanbanAPI.getAll();
+      setTasks(data);
+      isLoadedRef.current = true;
+    } catch (err) {
+      
+    }
+  };
 
   if (error) {
     return (

@@ -69,7 +69,6 @@ const Signin = ({ onLogin }) => {
         navigate("/");
       }
     } catch (err) {
-      console.error("❌ Ошибка входа:", err);
       setError(err.message || "Неверный логин или пароль");
     } finally {
       setIsLoading(false);
