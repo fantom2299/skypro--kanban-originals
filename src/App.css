@@ -16,8 +16,9 @@
   --border: #d0dbe8;
   --text-primary: #1e2a3b;
   --text-secondary: #94A6BE;
-  --text-muted: #94a6be;
+  --text-muted: #000000;
   --accent: #565EEF;
+  --accent-border: #94A6BE;
   --accent-hover: #3a5ce6;
   --orange: #f0603a;
   --orange-bg: #fff4f2;
@@ -53,11 +54,12 @@ body {
 
 /* ── Shared label ──────────────────────────── */
 .subttl {
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Roboto";
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  
+  letter-spacing: 0;
   margin-bottom: 6px;
   display: block;
 }
@@ -151,23 +153,26 @@ body {
 .categories__theme._orange {
   background: var(--orange-bg);
   color: var(--orange);
+  opacity: 40%;
 }
 .categories__theme._green {
   background: var(--green-bg);
   color: var(--green);
+  opacity: 40%;
 }
 .categories__theme._purple {
   background: var(--purple-bg);
   color: var(--purple);
+  opacity: 40%;
 }
 .categories__theme._active-category._orange {
-  border-color: var(--orange);
+  opacity: 100%;
 }
 .categories__theme._active-category._green {
-  border-color: var(--green);
+  opacity: 100%;
 }
 .categories__theme._active-category._purple {
-  border-color: var(--purple);
+  opacity: 100%;
 }
 
 /* ── Scrollbar ─────────────────────────────── */

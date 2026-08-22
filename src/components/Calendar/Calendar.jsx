@@ -102,6 +102,7 @@ export default function Calendar({ selectedDate, onSelect }) {
           <NavActions>
             <NavAction onClick={prev}>
               <svg
+                fill="#94A6BE"
                 xmlns="http://www.w3.org/2000/svg"
                 width="6"
                 height="11"
@@ -112,6 +113,7 @@ export default function Calendar({ selectedDate, onSelect }) {
             </NavAction>
             <NavAction onClick={next}>
               <svg
+                fill="#94A6BE"
                 xmlns="http://www.w3.org/2000/svg"
                 width="6"
                 height="11"

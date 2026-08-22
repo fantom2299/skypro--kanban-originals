@@ -1,36 +1,40 @@
 import styled from 'styled-components';
 
 export const CalendarWrapper = styled.div`
-  min-width: 220px;
+  width: 168px;
 `;
 
 export const CalendarTitle = styled.div`
-  margin-bottom: 10px;
+  margin-bottom: 0;
 `;
 
 export const CalendarBlock = styled.div`
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.radius.sm};
-  overflow: hidden;
+  // border: 1px solid ${({ theme }) => theme.colors.border};
+  // border-radius: ${({ theme }) => theme.radius.sm};
+  // overflow: hidden;
 `;
 
 export const CalendarNav = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
-  background: ${({ theme }) => theme.colors.background};
+  padding: 10px 0;
+  color: ${({ theme }) => theme.colors.textMuted};
 `;
 
 export const CalendarMonth = styled.div`
   font-size: 13px;
   font-weight: 600;
+  color: ${({ theme }) => theme.colors.textMuted};
 `;
 
 export const NavActions = styled.div`
   display: flex;
   gap: 8px;
+  color: ${({ theme }) => theme.colors.textMuted};
 `;
+
+
 
 export const NavAction = styled.button`
   cursor: pointer;
@@ -40,6 +44,7 @@ export const NavAction = styled.button`
   background: transparent;
   display: flex;
   align-items: center;
+  color: ${({ theme }) => theme.colors.textMuted};
 
   &:hover {
     background: ${({ theme }) => theme.colors.border};
@@ -47,7 +52,7 @@ export const NavAction = styled.button`
 `;
 
 export const CalendarContent = styled.div`
-  padding: 8px;
+  padding: 0;
 `;
 
 export const DaysNames = styled.div`
@@ -62,7 +67,7 @@ export const DayName = styled.div`
   font-size: 11px;
   font-weight: 600;
   color: ${({ theme, $weekend }) =>
-    $weekend ? theme.colors.orange : theme.colors.textMuted};
+    $weekend ? theme.colors.muted : theme.colors.textMuted};
   padding: 3px 0;
 `;
 
@@ -74,35 +79,38 @@ export const Cells = styled.div`
 
 export const Cell = styled.button`
   text-align: center;
-  font-size: 12px;
+  font-size: 10px;
   padding: 4px 2px;
-  border-radius: 4px;
+  border-radius: 20px;
   border: none;
+
   background: ${({ theme, $current, $active }) => {
-    if ($current) return theme.colors.primary;
+    if ($current) return theme.colors.muted;
     if ($active) return theme.colors.green;
+
     return 'transparent';
   }};
-  color: ${({ theme, $current, $active, $other, $weekend }) => {
-    if ($current || $active) return '#fff';
-    if ($other) return theme.colors.textMuted;
-    if ($weekend) return theme.colors.orange;
-    return theme.colors.textPrimary;
-  }};
+
+  color: ${({ $current, $active }) =>
+    $current || $active ? '#fff' : '#94A6BE'
+  };
+
   font-weight: ${({ $current, $active }) =>
-    $current || $active ? 700 : 400};
+    $current || $active ? 700 : 400
+  };
+
   cursor: pointer;
 
   &:hover {
     background: ${({ theme, $current, $active }) =>
-      $current || $active ? undefined : theme.colors.background};
+      $current || $active ? undefined : theme.colors.background
+    };
   }
 `;
 
 export const Period = styled.div`
-  padding: 8px 12px;
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-  font-size: 12px;
+  padding: 8px 0;
+  font-size: 10px;
   color: ${({ theme }) => theme.colors.textMuted};
 `;
 

@@ -39,8 +39,8 @@
   border: 2px solid transparent;
   transition: all 0.15s;
 }
-.status__theme._gray  { background: #f0f2f5; color: #5a6a7e; border-color: #94a6be; }
-.status__theme:hover  { border-color: var(--accent); }
+.status__theme._gray  { background: #94A6BE; color: #ffff; border-color: #94a6be; }
+.status__theme:hover  { border-color: var(--accent-border); }
 
 /* Description + Calendar */
 .pop-browse__wrap {

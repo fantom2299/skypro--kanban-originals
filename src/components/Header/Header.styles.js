@@ -28,6 +28,7 @@ export const Nav = styled.nav`
   display: flex;
   align-items: center;
   position: relative;
+  font-family: 'Roboto';
 `;
 
 export const NewTaskButton = styled.button`
